@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { BOOKING_STATUSES, PRODUCTION_STATUSES, PAYMENT_MODES, calcBalance, formatINR, paymentStatus } from "@/lib/booking";
+import { BOOKING_STATUSES, PRODUCTION_STATUSES, PAYMENT_MODES, IDOL_HEIGHTS, calcBalance, formatINR, paymentStatus } from "@/lib/booking";
 import { DateField } from "@/components/DateField";
 import { uploadPhoto, usePhotoUrl, type Booking } from "@/lib/data";
 
@@ -17,6 +17,8 @@ const schema = z
     customer_phone: z.string().trim().regex(/^[+\d][\d\s-]{9,14}$/, "Enter a valid mobile number"),
     booking_date: z.string().min(1, "Booking date is required"),
     idol_name: z.string().trim().max(150),
+    idol_height: z.enum(IDOL_HEIGHTS).nullable(),
+    idol_type: z.string().trim().max(150).nullable(),
     requirements: z.string().trim().max(2000),
     total_amount: z.number({ message: "Enter idol amount" }).min(0),
     advance_amount: z.number().min(0),
@@ -43,6 +45,8 @@ export function BookingForm({ initial, bookingNo, onSubmit, submitLabel }: {
     customer_phone: initial?.customer_phone ?? "",
     booking_date: initial?.booking_date ?? today(),
     idol_name: initial?.idol_name ?? "",
+    idol_height: initial?.idol_height ?? "",
+    idol_type: initial?.idol_type ?? "",
     requirements: initial?.requirements ?? "",
     total_amount: initial ? String(initial.total_amount) : "",
     advance_amount: initial ? String(initial.advance_amount) : "",
@@ -77,6 +81,8 @@ export function BookingForm({ initial, bookingNo, onSubmit, submitLabel }: {
     e.preventDefault();
     const parsed = schema.safeParse({
       ...f,
+      idol_height: f.idol_height || null,
+      idol_type: f.idol_type || null,
       total_amount: f.total_amount === "" ? undefined : Number(f.total_amount),
       advance_amount: Number(f.advance_amount) || 0,
       delivery_date: f.delivery_date || null,
@@ -151,6 +157,26 @@ export function BookingForm({ initial, bookingNo, onSubmit, submitLabel }: {
             <div className="space-y-1.5">
               <Label htmlFor="idol">Idol Name / मूर्तीचे नाव</Label>
               <Input id="idol" className="h-11" placeholder="e.g. Lalbaug Raja 3 ft" value={f.idol_name} onChange={set("idol_name")} />
+            </div>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div className="space-y-1.5">
+                <Label htmlFor="idol-height">Idol Height</Label>
+                <Select value={f.idol_height || "none"} onValueChange={(value) => setF({ ...f, idol_height: value === "none" ? "" : value })}>
+                  <SelectTrigger id="idol-height" className="h-11"><SelectValue placeholder="Select height" /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="none">Select height</SelectItem>
+                    {IDOL_HEIGHTS.map((height) => <SelectItem key={height} value={height}>{height}</SelectItem>)}
+                  </SelectContent>
+                </Select>
+                {err("idol_height")}
+              </div>
+              <div className="space-y-1.5">
+                <Label htmlFor="idol-type">Idol Type</Label>
+                <Select value={f.idol_type} disabled>
+                  <SelectTrigger id="idol-type" className="h-11"><SelectValue placeholder="Select type" /></SelectTrigger>
+                  <SelectContent>{f.idol_type && <SelectItem value={f.idol_type}>{f.idol_type}</SelectItem>}</SelectContent>
+                </Select>
+              </div>
             </div>
             <div className="space-y-1.5">
               <Label htmlFor="req">Additional Requirements / मूर्तीच्या अतिरिक्त आवश्यकता</Label>

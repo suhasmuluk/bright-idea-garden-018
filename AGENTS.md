@@ -35,3 +35,4 @@ use the editor.
 - Access is role-gated: only accounts with an `admin`/`staff` row in `user_roles` can use bookings, settings and photos; first signup becomes admin. Why: open signup must not expose customer data.
 - Payments are an append-only staff ledger; database triggers seed initial advances and derive the existing paid field under a booking row lock. Why: history and balances stay consistent across devices and booking edits cannot rewrite payments.
 - Keep production status separate from legacy booking status and payment status, with local date/time pickup fields. Why: existing records and workflows remain intact without timezone shifts.
+- Store idol height and type as nullable booking fields, with height choices shared by validation and the form. Why: old bookings stay editable and new selections persist independently of the idol name.

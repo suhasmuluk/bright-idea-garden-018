@@ -1,0 +1,2 @@
+ALTER TABLE public.bookings ADD COLUMN idol_height text, ADD COLUMN idol_type text;
+ALTER TABLE public.bookings ADD CONSTRAINT bookings_idol_height_options CHECK (idol_height IS NULL OR idol_height IN ('1 Foot', '1.5 Foot', '2 Foot', '2.5 Foot', '3 Foot', '3.5 Foot', '4 Foot', '4.5 Foot'));

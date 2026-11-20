@@ -1,7 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { calcBalance, paymentStatus, normalizePhone, formatINR, whatsappMessage, notificationMessage, matchesBooking, validPayment, PRODUCTION_STATUSES, PAYMENT_MODES, localDate } from "./booking";
+import { calcBalance, paymentStatus, normalizePhone, formatINR, whatsappMessage, notificationMessage, matchesBooking, validPayment, PRODUCTION_STATUSES, PAYMENT_MODES, IDOL_HEIGHTS, localDate } from "./booking";
 
 describe("booking rules", () => {
+  it("offers exactly the eight requested idol heights", () => {
+    expect(IDOL_HEIGHTS).toEqual(["1 Foot", "1.5 Foot", "2 Foot", "2.5 Foot", "3 Foot", "3.5 Foot", "4 Foot", "4.5 Foot"]);
+  });
   it("balance = total - advance", () => {
     expect(calcBalance(15000, 5000)).toBe(10000);
   });

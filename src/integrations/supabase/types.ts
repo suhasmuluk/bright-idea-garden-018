@@ -68,7 +68,9 @@ export type Database = {
           delivery_date: string | null
           delivery_time: string | null
           id: string
+          idol_height: string | null
           idol_name: string
+          idol_type: string | null
           initial_payment_mode: string
           photo_url: string | null
           production_status: string
@@ -89,7 +91,9 @@ export type Database = {
           delivery_date?: string | null
           delivery_time?: string | null
           id?: string
+          idol_height?: string | null
           idol_name?: string
+          idol_type?: string | null
           initial_payment_mode?: string
           photo_url?: string | null
           production_status?: string
@@ -110,7 +114,9 @@ export type Database = {
           delivery_date?: string | null
           delivery_time?: string | null
           id?: string
+          idol_height?: string | null
           idol_name?: string
+          idol_type?: string | null
           initial_payment_mode?: string
           photo_url?: string | null
           production_status?: string

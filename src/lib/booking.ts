@@ -3,6 +3,7 @@ export type BookingStatus = (typeof BOOKING_STATUSES)[number];
 export type PaymentStatus = "Unpaid" | "Partially Paid" | "Paid";
 export const PRODUCTION_STATUSES = ["Booked", "In Production", "Ready for Pickup", "Delivered", "Cancelled"] as const;
 export const PAYMENT_MODES = ["Cash", "UPI", "Bank"] as const;
+export const IDOL_HEIGHTS = ["1 Foot", "1.5 Foot", "2 Foot", "2.5 Foot", "3 Foot", "3.5 Foot", "4 Foot", "4.5 Foot"] as const;
 export type NotificationKind = "booking" | "payment" | "balance" | "ready";
 
 export function localDate(date = new Date()): string {
