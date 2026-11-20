@@ -28,3 +28,7 @@ use the editor.
   own key and store it in Secrets.
 - **Secrets.** Lovable manages them. Do not put secret values in the repo.
 <!-- LOVABLE:END -->
+
+- Staff-only app: all pages live under `src/routes/_authenticated/`; any signed-in user can manage all bookings (RLS `authenticated` = staff). Why: shop staff share one booking book.
+- Booking numbers come from a DB trigger + sequence and balance is a generated column. Why: numbering and math stay correct across devices.
+- Idol photos/logo live in the private `idol-photos` bucket; store the path and show via signed URLs. Why: public buckets are blocked in this workspace.
