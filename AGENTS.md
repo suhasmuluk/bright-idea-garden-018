@@ -29,6 +29,7 @@ use the editor.
 - **Secrets.** Lovable manages them. Do not put secret values in the repo.
 <!-- LOVABLE:END -->
 
-- Staff-only app: all pages live under `src/routes/_authenticated/`; any signed-in user can manage all bookings (RLS `authenticated` = staff). Why: shop staff share one booking book.
+- Staff-only app: all pages live under `src/routes/_authenticated/`; any staff-role user can manage all bookings (RLS `authenticated` = staff). Why: shop staff share one booking book.
 - Booking numbers come from a DB trigger + sequence and balance is a generated column. Why: numbering and math stay correct across devices.
 - Idol photos/logo live in the private `idol-photos` bucket; store the path and show via signed URLs. Why: public buckets are blocked in this workspace.
+- Access is role-gated: only accounts with an `admin`/`staff` row in `user_roles` can use bookings, settings and photos; first signup becomes admin. Why: open signup must not expose customer data.
