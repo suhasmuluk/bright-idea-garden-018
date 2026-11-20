@@ -6,6 +6,10 @@ export const PAYMENT_MODES = ["Cash", "UPI", "Bank"] as const;
 export const IDOL_HEIGHTS = ["1 Foot", "1.5 Foot", "2 Foot", "2.5 Foot", "3 Foot", "3.5 Foot", "4 Foot", "4.5 Foot"] as const;
 export type NotificationKind = "booking" | "payment" | "balance" | "ready";
 
+export function extraWorkDetails(requested: boolean, details: string): string {
+  return requested ? details.trim() : "";
+}
+
 export function localDate(date = new Date()): string {
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
 }

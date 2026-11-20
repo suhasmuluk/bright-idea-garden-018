@@ -94,7 +94,6 @@ function BookingView() {
             <dt className="text-muted-foreground">Delivery / Pickup</dt><dd>{formatDelivery(b.delivery_date, b.delivery_time)}</dd>
             <dt className="text-muted-foreground">Idol / मूर्ती</dt><dd className="font-medium">{b.idol_name || "—"}</dd>
             {b.idol_height && <><dt className="text-muted-foreground">Idol Height</dt><dd>{b.idol_height}</dd></>}
-            {b.idol_type && <><dt className="text-muted-foreground">Idol Type</dt><dd>{b.idol_type}</dd></>}
             <dt className="text-muted-foreground">Requirements</dt><dd className="whitespace-pre-wrap">{b.requirements || "—"}</dd>
           </dl>
           {photo && <img src={photo} alt="Idol" className="aspect-square w-full rounded-xl border object-cover" />}

@@ -6,8 +6,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { BOOKING_STATUSES, PRODUCTION_STATUSES, PAYMENT_MODES, IDOL_HEIGHTS, calcBalance, formatINR, paymentStatus } from "@/lib/booking";
+import { BOOKING_STATUSES, PRODUCTION_STATUSES, PAYMENT_MODES, IDOL_HEIGHTS, calcBalance, formatINR, paymentStatus, extraWorkDetails } from "@/lib/booking";
 import { DateField } from "@/components/DateField";
 import { uploadPhoto, usePhotoUrl, type Booking } from "@/lib/data";
 
@@ -18,7 +19,6 @@ const schema = z
     booking_date: z.string().min(1, "Booking date is required"),
     idol_name: z.string().trim().max(150),
     idol_height: z.enum(IDOL_HEIGHTS).nullable(),
-    idol_type: z.string().trim().max(150).nullable(),
     requirements: z.string().trim().max(2000),
     total_amount: z.number({ message: "Enter idol amount" }).min(0),
     advance_amount: z.number().min(0),
@@ -46,7 +46,6 @@ export function BookingForm({ initial, bookingNo, onSubmit, submitLabel }: {
     booking_date: initial?.booking_date ?? today(),
     idol_name: initial?.idol_name ?? "",
     idol_height: initial?.idol_height ?? "",
-    idol_type: initial?.idol_type ?? "",
     requirements: initial?.requirements ?? "",
     total_amount: initial ? String(initial.total_amount) : "",
     advance_amount: initial ? String(initial.advance_amount) : "",
@@ -56,6 +55,7 @@ export function BookingForm({ initial, bookingNo, onSubmit, submitLabel }: {
     delivery_time: initial?.delivery_time?.slice(0, 5) ?? "",
     initial_payment_mode: initial?.initial_payment_mode ?? "Cash",
   });
+  const [extraWork, setExtraWork] = useState(Boolean(initial?.requirements.trim()));
   const [photoPath, setPhotoPath] = useState<string | null>(initial?.photo_url ?? null);
   const [preview, setPreview] = useState<string | null>(null);
   const [file, setFile] = useState<File | null>(null);
@@ -82,7 +82,7 @@ export function BookingForm({ initial, bookingNo, onSubmit, submitLabel }: {
     const parsed = schema.safeParse({
       ...f,
       idol_height: f.idol_height || null,
-      idol_type: f.idol_type || null,
+      requirements: extraWorkDetails(extraWork, f.requirements),
       total_amount: f.total_amount === "" ? undefined : Number(f.total_amount),
       advance_amount: Number(f.advance_amount) || 0,
       delivery_date: f.delivery_date || null,
@@ -171,17 +171,18 @@ export function BookingForm({ initial, bookingNo, onSubmit, submitLabel }: {
                 {err("idol_height")}
               </div>
               <div className="space-y-1.5">
-                <Label htmlFor="idol-type">Idol Type</Label>
-                <Select value={f.idol_type} disabled>
-                  <SelectTrigger id="idol-type" className="h-11"><SelectValue placeholder="Select type" /></SelectTrigger>
-                  <SelectContent>{f.idol_type && <SelectItem value={f.idol_type}>{f.idol_type}</SelectItem>}</SelectContent>
-                </Select>
+                <Label id="extra-work-label">Extra Work Requested?</Label>
+                <ToggleGroup type="single" variant="outline" value={extraWork ? "yes" : "no"} onValueChange={(value) => { if (value) setExtraWork(value === "yes"); }} aria-labelledby="extra-work-label" className="grid h-11 grid-cols-2 gap-2">
+                  <ToggleGroupItem value="yes" className="h-11">Yes</ToggleGroupItem>
+                  <ToggleGroupItem value="no" className="h-11">No</ToggleGroupItem>
+                </ToggleGroup>
               </div>
             </div>
-            <div className="space-y-1.5">
-              <Label htmlFor="req">Additional Requirements / मूर्तीच्या अतिरिक्त आवश्यकता</Label>
-              <Textarea id="req" rows={4} placeholder="Size, colours, decoration, customisation…" value={f.requirements} onChange={set("requirements")} />
-            </div>
+            {extraWork && <div className="space-y-1.5">
+              <Label htmlFor="req">What extra work has the customer asked for?</Label>
+              <Textarea id="req" rows={4} required placeholder="Describe the requested decoration, colours or customisation…" value={f.requirements} onChange={set("requirements")} />
+              {err("requirements")}
+            </div>}
           </div>
           <div className="space-y-2">
             <Label>Idol Photo</Label>

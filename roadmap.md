@@ -6,5 +6,9 @@
 
 # Idol dropdowns
 - [x] Add and save the eight requested idol heights after Idol Name.
-- [ ] Add Idol Type dropdown choices — waiting for the user's options.
+- [x] Idol Type dropdown superseded by the extra-work request.
 - [x] Test height choices and verify booking creation and editing.
+
+# Extra work
+- [x] Replace Idol Type with a Yes/No toggle and conditional request text box.
+- [x] Verify extra-work saving, editing, and No selection on desktop and mobile.

@@ -1,7 +1,13 @@
 import { describe, expect, it } from "vitest";
-import { calcBalance, paymentStatus, normalizePhone, formatINR, whatsappMessage, notificationMessage, matchesBooking, validPayment, PRODUCTION_STATUSES, PAYMENT_MODES, IDOL_HEIGHTS, localDate } from "./booking";
+import { calcBalance, paymentStatus, normalizePhone, formatINR, whatsappMessage, notificationMessage, matchesBooking, validPayment, PRODUCTION_STATUSES, PAYMENT_MODES, IDOL_HEIGHTS, localDate, extraWorkDetails } from "./booking";
 
 describe("booking rules", () => {
+  it("keeps the customer's extra-work details when Yes is selected", () => {
+    expect(extraWorkDetails(true, "  Add a golden crown  ")).toBe("Add a golden crown");
+  });
+  it("saves no extra-work details when No is selected", () => {
+    expect(extraWorkDetails(false, "Add a golden crown")).toBe("");
+  });
   it("offers exactly the eight requested idol heights", () => {
     expect(IDOL_HEIGHTS).toEqual(["1 Foot", "1.5 Foot", "2 Foot", "2.5 Foot", "3 Foot", "3.5 Foot", "4 Foot", "4.5 Foot"]);
   });
