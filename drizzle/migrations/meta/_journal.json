@@ -22,6 +22,13 @@
       "when": 1795180478582,
       "tag": "0002_staff_roles",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1795182225345,
+      "tag": "0003_booking_payments_and_delivery",
+      "breakpoints": true
     }
   ]
 }

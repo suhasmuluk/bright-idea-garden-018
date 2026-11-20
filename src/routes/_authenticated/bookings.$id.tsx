@@ -6,14 +6,16 @@ import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
-import { bookingQuery, settingsQuery, usePhotoUrl } from "@/lib/data";
-import { calcBalance, formatINR, paymentStatus, whatsappMessage, whatsappUrl } from "@/lib/booking";
+import { bookingQuery, settingsQuery, paymentsQuery, usePhotoUrl, type Payment } from "@/lib/data";
+import { calcBalance, formatINR, formatDelivery, paymentStatus, notificationMessage, whatsappMessage, whatsappUrl, type NotificationKind } from "@/lib/booking";
+import { PaymentHistory } from "@/components/PaymentHistory";
+import { ProductionSelect } from "@/components/ProductionSelect";
 
 export const Route = createFileRoute("/_authenticated/bookings/$id")({
   validateSearch: z.object({ created: z.boolean().optional(), print: z.boolean().optional(), wa: z.boolean().optional() }),
-  head: () => ({ meta: [{ title: "Booking Receipt – Idol Bookings" }, { name: "description", content: "Booking details, WhatsApp and print receipt." }, { property: "og:title", content: "Booking Receipt" }, { property: "og:description", content: "Booking details and receipt." }] }),
+  head: () => ({ meta: [{ title: "Booking Receipt – Idol Bookings" }, { name: "description", content: "Booking details, payments, pickup schedule, WhatsApp and print receipt." }, { property: "og:title", content: "Booking Receipt – Idol Bookings" }, { property: "og:description", content: "Booking details, payment history and receipt." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }] }),
   loader: async ({ context, params }) => {
-    await Promise.all([context.queryClient.ensureQueryData(bookingQuery(params.id)), context.queryClient.ensureQueryData(settingsQuery)]);
+    await Promise.all([context.queryClient.ensureQueryData(bookingQuery(params.id)), context.queryClient.ensureQueryData(settingsQuery), context.queryClient.ensureQueryData(paymentsQuery(params.id))]);
   },
   component: BookingView,
 });
@@ -28,11 +30,18 @@ function BookingView() {
   const [waOpen, setWaOpen] = useState(!!search.wa);
   const [msg, setMsg] = useState(() => whatsappMessage(b, s.shop_name, s.rules, photo));
   const [msgEdited, setMsgEdited] = useState(false);
+  const [kind, setKind] = useState<NotificationKind>("booking");
+  const [notifiedPayment, setNotifiedPayment] = useState<Payment | undefined>();
   const total = Number(b.total_amount), adv = Number(b.advance_amount);
 
+  function openNotification(next: NotificationKind, payment?: Payment) {
+    setKind(next); setNotifiedPayment(payment); setMsgEdited(false);
+    setMsg(notificationMessage(next, b, s.shop_name, s.rules, photo, payment)); setWaOpen(true);
+  }
+
   useEffect(() => {
-    if (photo && !msgEdited) setMsg(whatsappMessage(b, s.shop_name, s.rules, photo));
-  }, [photo, msgEdited, b, s]);
+    if (!msgEdited) setMsg(notificationMessage(kind, b, s.shop_name, s.rules, photo, notifiedPayment));
+  }, [photo, msgEdited, b, s, kind, notifiedPayment]);
 
   useEffect(() => {
     if (!search.print) return;
@@ -52,10 +61,12 @@ function BookingView() {
           </div>
         )}
         <div className="grid gap-3 sm:grid-cols-3">
-          <Button variant="whatsapp" size="xl" onClick={() => { setMsg(whatsappMessage(b, s.shop_name, s.rules, photo)); setWaOpen(true); }}><MessageCircle />Send via WhatsApp</Button>
+          <Button variant="whatsapp" size="xl" onClick={() => openNotification("booking")}><MessageCircle />Send via WhatsApp</Button>
           <Button variant="hero" size="xl" onClick={() => window.print()}><Printer />Print Booking</Button>
           <Button variant="outline" size="xl" asChild><Link to="/edit/$id" params={{ id }}><Pencil />Edit</Link></Button>
         </div>
+        <div className="flex flex-wrap items-center gap-3"><span className="text-sm font-medium">Production</span><ProductionSelect id={id} value={b.production_status} /></div>
+        <div className="flex flex-wrap gap-2"><Button variant="outline" onClick={() => openNotification("balance")} disabled={adv >= total}><MessageCircle className="text-whatsapp" />Balance Reminder</Button><Button variant="outline" onClick={() => openNotification("ready")} disabled={b.production_status !== "Ready for Pickup"}><MessageCircle className="text-whatsapp" />Ready for Pickup</Button></div>
       </div>
 
       <article className="print-sheet rounded-2xl border bg-card p-6 shadow-warm sm:p-8">
@@ -80,6 +91,7 @@ function BookingView() {
             <dt className="text-muted-foreground">Customer</dt><dd className="font-medium">{b.customer_name}</dd>
             <dt className="text-muted-foreground">Mobile</dt><dd>{b.customer_phone}</dd>
             <dt className="text-muted-foreground">Booking Date</dt><dd>{new Date(b.booking_date).toLocaleDateString("en-IN")}</dd>
+            <dt className="text-muted-foreground">Delivery / Pickup</dt><dd>{formatDelivery(b.delivery_date, b.delivery_time)}</dd>
             <dt className="text-muted-foreground">Idol / मूर्ती</dt><dd className="font-medium">{b.idol_name || "—"}</dd>
             <dt className="text-muted-foreground">Requirements</dt><dd className="whitespace-pre-wrap">{b.requirements || "—"}</dd>
           </dl>
@@ -89,7 +101,7 @@ function BookingView() {
         <table className="mt-6 w-full text-sm">
           <tbody>
             <tr className="border-b"><td className="py-2">Total Amount</td><td className="py-2 text-right font-medium">{formatINR(total)}</td></tr>
-            <tr className="border-b"><td className="py-2">Advance Received</td><td className="py-2 text-right font-medium">{formatINR(adv)}</td></tr>
+            <tr className="border-b"><td className="py-2">Advance / Total Paid</td><td className="py-2 text-right font-medium">{formatINR(adv)}</td></tr>
             <tr><td className="py-2 text-base font-semibold">Balance Amount</td><td className="py-2 text-right text-lg font-bold text-maroon">{formatINR(calcBalance(total, adv))}</td></tr>
           </tbody>
         </table>
@@ -105,6 +117,7 @@ function BookingView() {
           <div className="border-t pt-2">For {s.shop_name}</div>
         </div>
       </article>
+      <PaymentHistory booking={b} onNotify={(payment) => openNotification("payment", payment)} />
 
       <Dialog open={waOpen} onOpenChange={setWaOpen}>
         <DialogContent>

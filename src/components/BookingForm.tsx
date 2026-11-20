@@ -7,7 +7,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { BOOKING_STATUSES, calcBalance, formatINR, paymentStatus } from "@/lib/booking";
+import { BOOKING_STATUSES, PRODUCTION_STATUSES, PAYMENT_MODES, calcBalance, formatINR, paymentStatus } from "@/lib/booking";
+import { DateField } from "@/components/DateField";
 import { uploadPhoto, usePhotoUrl, type Booking } from "@/lib/data";
 
 const schema = z
@@ -20,6 +21,10 @@ const schema = z
     total_amount: z.number({ message: "Enter idol amount" }).min(0),
     advance_amount: z.number().min(0),
     status: z.enum(BOOKING_STATUSES),
+    production_status: z.enum(PRODUCTION_STATUSES),
+    delivery_date: z.string().nullable(),
+    delivery_time: z.string().nullable(),
+    initial_payment_mode: z.enum(PAYMENT_MODES),
   })
   .refine((v) => v.advance_amount <= v.total_amount, { path: ["advance_amount"], message: "Advance cannot exceed total amount" });
 
@@ -42,6 +47,10 @@ export function BookingForm({ initial, bookingNo, onSubmit, submitLabel }: {
     total_amount: initial ? String(initial.total_amount) : "",
     advance_amount: initial ? String(initial.advance_amount) : "",
     status: (initial?.status ?? "Booked") as (typeof BOOKING_STATUSES)[number],
+    production_status: initial?.production_status ?? "Booked",
+    delivery_date: initial?.delivery_date ?? "",
+    delivery_time: initial?.delivery_time?.slice(0, 5) ?? "",
+    initial_payment_mode: initial?.initial_payment_mode ?? "Cash",
   });
   const [photoPath, setPhotoPath] = useState<string | null>(initial?.photo_url ?? null);
   const [preview, setPreview] = useState<string | null>(null);
@@ -70,6 +79,8 @@ export function BookingForm({ initial, bookingNo, onSubmit, submitLabel }: {
       ...f,
       total_amount: f.total_amount === "" ? undefined : Number(f.total_amount),
       advance_amount: Number(f.advance_amount) || 0,
+      delivery_date: f.delivery_date || null,
+      delivery_time: f.delivery_date && f.delivery_time ? f.delivery_time : null,
     });
     if (!parsed.success) {
       const errs: Record<string, string> = {};
@@ -124,6 +135,12 @@ export function BookingForm({ initial, bookingNo, onSubmit, submitLabel }: {
               <SelectContent>{BOOKING_STATUSES.map((s) => <SelectItem key={s} value={s}>{s}</SelectItem>)}</SelectContent>
             </Select>
           </div>
+          <div className="space-y-1.5">
+            <Label>Production Status</Label>
+            <Select value={f.production_status} onValueChange={(v) => setF({ ...f, production_status: v })}><SelectTrigger className="h-11" aria-label="Production status"><SelectValue /></SelectTrigger><SelectContent>{PRODUCTION_STATUSES.map((s) => <SelectItem key={s} value={s}>{s}</SelectItem>)}</SelectContent></Select>
+          </div>
+          <div className="space-y-1.5"><Label>Expected Delivery / Pickup Date</Label><DateField label="Delivery / pickup date" value={f.delivery_date} onChange={(value) => setF({ ...f, delivery_date: value, delivery_time: value ? f.delivery_time : "" })} /></div>
+          <div className="space-y-1.5"><Label htmlFor="delivery-time">Expected Delivery / Pickup Time</Label><Input id="delivery-time" className="h-11" type="time" disabled={!f.delivery_date} value={f.delivery_time} onChange={set("delivery_time")} /></div>
         </div>
       </section>
 
@@ -175,8 +192,8 @@ export function BookingForm({ initial, bookingNo, onSubmit, submitLabel }: {
             {err("total_amount")}
           </div>
           <div className="space-y-1.5">
-            <Label htmlFor="adv">Advance Amount (₹)</Label>
-            <Input id="adv" className="h-11 text-lg" type="number" inputMode="decimal" min={0} value={f.advance_amount} onChange={set("advance_amount")} aria-invalid={overAdvance} />
+            <Label htmlFor="adv">{initial ? "Total Paid (₹)" : "Advance Amount (₹)"}</Label>
+            <Input id="adv" className="h-11 text-lg" type="number" inputMode="decimal" min={0} step="0.01" readOnly={Boolean(initial)} value={f.advance_amount} onChange={set("advance_amount")} aria-invalid={overAdvance} />
             {overAdvance ? <p className="text-sm text-destructive">Advance cannot exceed total amount</p> : err("advance_amount")}
           </div>
           <div className="space-y-1.5">
@@ -187,6 +204,7 @@ export function BookingForm({ initial, bookingNo, onSubmit, submitLabel }: {
             </div>
           </div>
         </div>
+        {!initial && <div className="mt-4 space-y-1.5"><Label>Advance Payment Mode</Label><Select value={f.initial_payment_mode} onValueChange={(v) => setF({ ...f, initial_payment_mode: v })}><SelectTrigger aria-label="Advance payment mode"><SelectValue /></SelectTrigger><SelectContent>{PAYMENT_MODES.map((mode) => <SelectItem key={mode} value={mode}>{mode}</SelectItem>)}</SelectContent></Select></div>}
       </section>
 
       <Button type="submit" variant="hero" size="xl" className="h-14 w-full text-lg" disabled={busy || overAdvance}>

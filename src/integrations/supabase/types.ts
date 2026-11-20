@@ -14,6 +14,47 @@ export type Database = {
   }
   public: {
     Tables: {
+      booking_payments: {
+        Row: {
+          amount: number
+          booking_id: string
+          created_at: string
+          created_by: string | null
+          id: string
+          is_opening_balance: boolean
+          payment_date: string
+          payment_mode: string | null
+        }
+        Insert: {
+          amount: number
+          booking_id: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          is_opening_balance?: boolean
+          payment_date?: string
+          payment_mode?: string | null
+        }
+        Update: {
+          amount?: number
+          booking_id?: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          is_opening_balance?: boolean
+          payment_date?: string
+          payment_mode?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "booking_payments_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
+            referencedRelation: "bookings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       bookings: {
         Row: {
           advance_amount: number
@@ -24,9 +65,13 @@ export type Database = {
           created_by: string | null
           customer_name: string
           customer_phone: string
+          delivery_date: string | null
+          delivery_time: string | null
           id: string
           idol_name: string
+          initial_payment_mode: string
           photo_url: string | null
+          production_status: string
           requirements: string
           status: string
           total_amount: number
@@ -41,9 +86,13 @@ export type Database = {
           created_by?: string | null
           customer_name: string
           customer_phone: string
+          delivery_date?: string | null
+          delivery_time?: string | null
           id?: string
           idol_name?: string
+          initial_payment_mode?: string
           photo_url?: string | null
+          production_status?: string
           requirements?: string
           status?: string
           total_amount?: number
@@ -58,9 +107,13 @@ export type Database = {
           created_by?: string | null
           customer_name?: string
           customer_phone?: string
+          delivery_date?: string | null
+          delivery_time?: string | null
           id?: string
           idol_name?: string
+          initial_payment_mode?: string
           photo_url?: string | null
+          production_status?: string
           requirements?: string
           status?: string
           total_amount?: number

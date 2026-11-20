@@ -6,7 +6,7 @@ import { BookingForm } from "@/components/BookingForm";
 import { bookingQuery } from "@/lib/data";
 
 export const Route = createFileRoute("/_authenticated/edit/$id")({
-  head: () => ({ meta: [{ title: "Edit Booking – Idol Bookings" }, { name: "description", content: "Edit an idol booking." }, { property: "og:title", content: "Edit Booking" }, { property: "og:description", content: "Edit an idol booking." }] }),
+  head: () => ({ meta: [{ title: "Edit Booking – Idol Bookings" }, { name: "description", content: "Edit an idol booking." }, { property: "og:title", content: "Edit Booking – Idol Bookings" }, { property: "og:description", content: "Edit an idol booking." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }] }),
   loader: ({ context, params }) => context.queryClient.ensureQueryData(bookingQuery(params.id)),
   component: EditBooking,
 });

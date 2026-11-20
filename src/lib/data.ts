@@ -4,6 +4,16 @@ import type { Tables } from "@/integrations/supabase/types";
 
 export type Booking = Tables<"bookings">;
 export type Settings = Tables<"shop_settings">;
+export type Payment = Tables<"booking_payments">;
+
+export const paymentsQuery = (id: string) => queryOptions({
+  queryKey: ["payments", id],
+  queryFn: async () => {
+    const { data, error } = await supabase.from("booking_payments").select("*").eq("booking_id", id).order("payment_date", { ascending: false }).order("created_at", { ascending: false });
+    if (error) throw error;
+    return data;
+  },
+});
 
 export const bookingsQuery = queryOptions({
   queryKey: ["bookings"],
@@ -39,7 +49,8 @@ export function usePhotoUrl(path: string | null | undefined) {
     enabled: !!path,
     staleTime: 50 * 60 * 1000,
     queryFn: async () => {
-      const { data, error } = await supabase.storage.from("idol-photos").createSignedUrl(path!, 3600);
+      if (!path) throw new Error("Photo path is required");
+      const { data, error } = await supabase.storage.from("idol-photos").createSignedUrl(path, 3600);
       if (error) throw error;
       return data.signedUrl;
     },

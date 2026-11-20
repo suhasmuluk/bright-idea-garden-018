@@ -11,7 +11,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { settingsQuery, uploadPhoto, usePhotoUrl } from "@/lib/data";
 
 export const Route = createFileRoute("/_authenticated/settings")({
-  head: () => ({ meta: [{ title: "Settings – Idol Bookings" }, { name: "description", content: "Shop details, logo and booking rules." }, { property: "og:title", content: "Shop Settings" }, { property: "og:description", content: "Shop details and booking rules." }] }),
+  head: () => ({ meta: [{ title: "Settings – Idol Bookings" }, { name: "description", content: "Shop details, logo and booking rules." }, { property: "og:title", content: "Shop Settings – Idol Bookings" }, { property: "og:description", content: "Shop details and booking rules." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }] }),
   loader: ({ context }) => context.queryClient.ensureQueryData(settingsQuery),
   component: SettingsPage,
 });

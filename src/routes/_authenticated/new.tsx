@@ -5,7 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { BookingForm } from "@/components/BookingForm";
 
 export const Route = createFileRoute("/_authenticated/new")({
-  head: () => ({ meta: [{ title: "New Booking – Idol Bookings" }, { name: "description", content: "Create a new idol booking." }, { property: "og:title", content: "New Booking" }, { property: "og:description", content: "Create a new idol booking." }] }),
+  head: () => ({ meta: [{ title: "New Booking – Idol Bookings" }, { name: "description", content: "Create a new idol booking." }, { property: "og:title", content: "New Booking – Idol Bookings" }, { property: "og:description", content: "Create a new idol booking." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }] }),
   component: NewBooking,
 });
 
