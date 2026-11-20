@@ -26,8 +26,13 @@ function BookingView() {
   const { data: photo } = usePhotoUrl(b.photo_url);
   const { data: logo } = usePhotoUrl(s.logo_url);
   const [waOpen, setWaOpen] = useState(!!search.wa);
-  const [msg, setMsg] = useState(() => whatsappMessage(b, s.shop_name, s.rules));
+  const [msg, setMsg] = useState(() => whatsappMessage(b, s.shop_name, s.rules, photo));
+  const [msgEdited, setMsgEdited] = useState(false);
   const total = Number(b.total_amount), adv = Number(b.advance_amount);
+
+  useEffect(() => {
+    if (photo && !msgEdited) setMsg(whatsappMessage(b, s.shop_name, s.rules, photo));
+  }, [photo, msgEdited, b, s]);
 
   useEffect(() => {
     if (!search.print) return;
@@ -47,7 +52,7 @@ function BookingView() {
           </div>
         )}
         <div className="grid gap-3 sm:grid-cols-3">
-          <Button variant="whatsapp" size="xl" onClick={() => { setMsg(whatsappMessage(b, s.shop_name, s.rules)); setWaOpen(true); }}><MessageCircle />Send via WhatsApp</Button>
+          <Button variant="whatsapp" size="xl" onClick={() => { setMsg(whatsappMessage(b, s.shop_name, s.rules, photo)); setWaOpen(true); }}><MessageCircle />Send via WhatsApp</Button>
           <Button variant="hero" size="xl" onClick={() => window.print()}><Printer />Print Booking</Button>
           <Button variant="outline" size="xl" asChild><Link to="/edit/$id" params={{ id }}><Pencil />Edit</Link></Button>
         </div>
@@ -105,7 +110,7 @@ function BookingView() {
         <DialogContent>
           <DialogHeader><DialogTitle>WhatsApp to {b.customer_name}</DialogTitle></DialogHeader>
           <p className="text-sm text-muted-foreground">Review or edit the message before sending to {b.customer_phone}.</p>
-          <Textarea rows={14} value={msg} onChange={(e) => setMsg(e.target.value)} className="text-sm" />
+          <Textarea rows={14} value={msg} onChange={(e) => { setMsgEdited(true); setMsg(e.target.value); }} className="text-sm" />
           <DialogFooter>
             <Button variant="whatsapp" size="xl" asChild>
               <a href={whatsappUrl(b.customer_phone, msg)} target="_blank" rel="noreferrer" onClick={() => setWaOpen(false)}><MessageCircle />Open WhatsApp</a>

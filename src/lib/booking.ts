@@ -33,7 +33,7 @@ export interface BookingLike {
   advance_amount: number | string;
 }
 
-export function whatsappMessage(b: BookingLike, shopName: string, rules: string[]): string {
+export function whatsappMessage(b: BookingLike, shopName: string, rules: string[], photoUrl?: string | null): string {
   const total = Number(b.total_amount);
   const adv = Number(b.advance_amount);
   const lines = [
@@ -46,6 +46,7 @@ export function whatsappMessage(b: BookingLike, shopName: string, rules: string[
     `Idol: ${b.idol_name || "-"}`,
   ];
   if (b.requirements.trim()) lines.push(`Requirements: ${b.requirements.trim()}`);
+  if (photoUrl) lines.push(`Idol Photo: ${photoUrl}`);
   lines.push(
     ``,
     `Total Amount: ${formatINR(total)}`,

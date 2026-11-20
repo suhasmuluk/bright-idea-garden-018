@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { calcBalance, paymentStatus, normalizePhone, formatINR } from "./booking";
+import { calcBalance, paymentStatus, normalizePhone, formatINR, whatsappMessage } from "./booking";
 
 describe("booking rules", () => {
   it("balance = total - advance", () => {
@@ -15,5 +15,11 @@ describe("booking rules", () => {
   });
   it("formats rupees in Indian grouping", () => {
     expect(formatINR(125000)).toBe("₹1,25,000");
+  });
+  it("WhatsApp message includes the idol photo link when given", () => {
+    const b = { booking_no: "BK-2026-0001", customer_name: "Suhas", booking_date: "2026-08-20", idol_name: "Raja 3ft", requirements: "", total_amount: 15000, advance_amount: 5000 };
+    const withPhoto = whatsappMessage(b, "Shop", [], "https://example.com/photo.jpg");
+    expect(withPhoto).toContain("Idol Photo: https://example.com/photo.jpg");
+    expect(whatsappMessage(b, "Shop", [])).not.toContain("Idol Photo:");
   });
 });
