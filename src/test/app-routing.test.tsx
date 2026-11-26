@@ -14,4 +14,19 @@ describe("App routing", () => {
 
     expect(matches.at(-1)?.routeId).not.toBe(rootRouteId);
   });
+
+  it.each([
+    ["/dashboard", "/_authenticated/dashboard"],
+    ["/new", "/_authenticated/new"],
+    ["/settings", "/_authenticated/settings"],
+    ["/bookings/test-booking", "/_authenticated/bookings/$id"],
+    ["/edit/test-booking", "/_authenticated/edit/$id"],
+  ])("preserves protected route %s in the shared SPA tree", (url, routeId) => {
+    const router = createRouter({ routeTree, context: { queryClient: new QueryClient() } });
+    const matches = router.matchRoutes(url);
+    expect(matches.at(-1)?.routeId).toBe(routeId);
+    const guard = matches.find((match) => match.routeId === "/_authenticated");
+    expect(guard).toBeDefined();
+    expect(router.routesById["/_authenticated"]?.options.beforeLoad).toBeTypeOf("function");
+  });
 });

@@ -12,3 +12,9 @@
 # Extra work
 - [x] Replace Idol Type with a Yes/No toggle and conditional request text box.
 - [x] Verify extra-work saving, editing, and No selection on desktop and mobile.
+
+# Plesk deployment
+- [x] Audit dynamic features and add an independent Apache static build without changing app logic or database schema.
+- [x] Add Apache routing rules, secure public configuration, package verification and deployment instructions.
+- [x] Build and test the production upload package, including signed-in flows, refresh and mobile layouts; document password-login and real-domain checks that remain unverified.
+- [x] Keep auth configuration unchanged while the domain is undecided; include demo-domain and later production-domain setup instructions.

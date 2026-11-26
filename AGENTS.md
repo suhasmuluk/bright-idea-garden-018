@@ -37,3 +37,4 @@ use the editor.
 - Keep production status separate from legacy booking status and payment status, with local date/time pickup fields. Why: existing records and workflows remain intact without timezone shifts.
 - Store idol height as a nullable booking field, with height choices shared by validation and the form. Why: old bookings stay editable and height persists independently of the idol name.
 - Reuse booking requirements for extra-work details and derive the edit-form toggle from existing text; leave the retired idol-type field untouched. Why: existing notes remain accessible without a schema change.
+- Build Plesk through the independent static Vite entry, reusing the existing TanStack route tree and replacing only the document shell; reject server modules in its bundle. Why: Apache needs no Node runtime while Lovable preview and all business logic remain unchanged.

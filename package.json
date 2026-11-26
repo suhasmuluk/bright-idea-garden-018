@@ -7,6 +7,8 @@
     "dev": "vite dev",
     "build": "vite build",
     "build:dev": "vite build --mode development",
+    "build:plesk": "node scripts/build-plesk.mjs",
+    "verify:plesk": "node scripts/verify-plesk.mjs",
     "preview": "vite preview",
     "lint": "eslint .",
     "format": "prettier --write .",

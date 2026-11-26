@@ -109,6 +109,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 });
 
 function RootShell({ children }: { children: ReactNode }) {
+  // The dedicated Apache build already supplies its HTML document.
+  if (import.meta.env["VITE_PLESK_STATIC"] === "true") {
+    return <><HeadContent />{children}</>;
+  }
   return (
     <html lang="en">
       <head>

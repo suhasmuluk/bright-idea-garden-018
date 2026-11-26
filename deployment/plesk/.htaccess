@@ -1,0 +1,30 @@
+Options -Indexes -MultiViews
+DirectoryIndex index.html
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  # Existing files and directories are served normally.
+  RewriteCond %{REQUEST_FILENAME} -f [OR]
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^ - [L]
+  # Missing assets/endpoints must be 404, never HTML masquerading as JavaScript.
+  RewriteRule ^(?:assets/|api/|_serverFn/|.*\.[^/]+$) - [R=404,L]
+  # Preserve client-side routes, including bookings/:id and edit/:id.
+  RewriteRule ^ index.html [L]
+</IfModule>
+
+<IfModule mod_headers.c>
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  <FilesMatch "^(index\.html|README\.md|TEST-RESULTS\.md|manifest\.json|verification\.json)$">
+    Header set Cache-Control "no-store"
+  </FilesMatch>
+  <FilesMatch "\.(js|css|woff2?|png|jpe?g|webp|svg|ico)$">
+    Header set Cache-Control "public, max-age=3600"
+  </FilesMatch>
+</IfModule>
+
+# Build/configuration files must never be served, even if accidentally uploaded.
+<FilesMatch "(^\.|^(?:README\.md|TEST-RESULTS\.md|manifest\.json|verification\.json|package(?:-lock)?\.json)$|\.(?:env|map|sql|ts|tsx)$)">
+  Require all denied
+</FilesMatch>

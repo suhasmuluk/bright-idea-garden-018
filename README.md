@@ -24,3 +24,13 @@ cd <repository-name>
 npm i
 npm run dev
 ```
+
+## Plesk Apache production package
+
+```sh
+npm install
+npm run test
+npm run build:plesk
+```
+
+Upload the contents of `.output/plesk-upload/` (including `.htaccess`) to the domain's `httpdocs`. No Node.js runtime is needed on the VPS; the existing Lovable Cloud backend remains in use. See [the Plesk deployment guide](deployment/plesk/README.md) for HTTPS, Apache/nginx, environment and sign-in redirect requirements. `npm run verify:plesk` checks an already-built package.
