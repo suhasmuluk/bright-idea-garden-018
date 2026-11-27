@@ -13,6 +13,11 @@
 - [x] Replace Idol Type with a Yes/No toggle and conditional request text box.
 - [x] Verify extra-work saving, editing, and No selection on desktop and mobile.
 
+# Home page layout
+- [x] Home shows a welcome plus today's pickup/delivery list, with no amounts, no New Booking button and no booking table.
+- [x] Move the booking table with search and filters to its own Bookings page in the menu.
+- [x] Verify home and Bookings pages signed in on desktop and mobile.
+
 # Plesk deployment
 - [x] Audit dynamic features and add an independent Apache static build without changing app logic or database schema.
 - [x] Add Apache routing rules, secure public configuration, package verification and deployment instructions.

@@ -17,6 +17,7 @@ describe("App routing", () => {
 
   it.each([
     ["/dashboard", "/_authenticated/dashboard"],
+    ["/bookings", "/_authenticated/bookings/"],
     ["/new", "/_authenticated/new"],
     ["/settings", "/_authenticated/settings"],
     ["/bookings/test-booking", "/_authenticated/bookings/$id"],
