@@ -2,10 +2,11 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { ArrowRight, CalendarClock, Inbox, ListChecks } from "lucide-react";
 import { bookingsQuery, settingsQuery } from "@/lib/data";
-import { formatDelivery, localDate } from "@/lib/booking";
+import { localDate } from "@/lib/booking";
+import { BookingsTable } from "@/components/BookingsTable";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
-  head: () => ({ meta: [{ title: "Home – Idol Bookings" }, { name: "description", content: "Welcome, today's pickup and delivery schedule, and quick links to bookings and settings." }, { property: "og:title", content: "Home – Idol Bookings" }, { property: "og:description", content: "Today's pickup and delivery schedule at a glance." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }] }),
+  head: () => ({ meta: [{ title: "Home – Idol Bookings" }, { name: "description", content: "Welcome, today's pickup and delivery schedule, and the complete searchable booking table." }, { property: "og:title", content: "Home – Idol Bookings" }, { property: "og:description", content: "Today's pickup and delivery schedule at a glance." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }] }),
   loader: ({ context }) => Promise.all([
     context.queryClient.ensureQueryData(settingsQuery),
     context.queryClient.ensureQueryData(bookingsQuery),
@@ -66,6 +67,8 @@ function Home() {
           </ul>
         )}
       </section>
+
+      <BookingsTable />
 
       <div className="flex flex-wrap gap-3">
         <Link to="/bookings" className="inline-flex items-center gap-2 rounded-2xl border bg-card px-5 py-3 text-sm font-medium hover:border-primary hover:bg-secondary/60">

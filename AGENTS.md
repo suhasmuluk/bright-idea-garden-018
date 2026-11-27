@@ -38,3 +38,5 @@ use the editor.
 - Store idol height as a nullable booking field, with height choices shared by validation and the form. Why: old bookings stay editable and height persists independently of the idol name.
 - Reuse booking requirements for extra-work details and derive the edit-form toggle from existing text; leave the retired idol-type field untouched. Why: existing notes remain accessible without a schema change.
 - Build Plesk through the independent static Vite entry, reusing the existing TanStack route tree and replacing only the document shell; reject server modules in its bundle. Why: Apache needs no Node runtime while Lovable preview and all business logic remain unchanged.
+
+- Reuse the shared BookingsTable on Home and Bookings, and keep the amount summaries in their own protected route. Why: both booking lists retain identical filters and actions without duplicating logic.

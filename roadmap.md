@@ -14,8 +14,8 @@
 - [x] Verify extra-work saving, editing, and No selection on desktop and mobile.
 
 # Home page layout
-- [x] Home shows a welcome plus today's pickup/delivery list, with no amounts, no New Booking button and no booking table.
-- [x] Move the booking table with search and filters to its own Bookings page in the menu.
+- [x] Home shows a welcome, today's pickup/delivery list and the booking table; amount summaries live on Amounts.
+- [x] Keep the booking table with search and filters available on the Bookings page in the menu too.
 - [x] Verify home and Bookings pages signed in on desktop and mobile.
 
 # Plesk deployment
@@ -23,3 +23,7 @@
 - [x] Add Apache routing rules, secure public configuration, package verification and deployment instructions.
 - [x] Build and test the production upload package, including signed-in flows, refresh and mobile layouts; document password-login and real-domain checks that remain unverified.
 - [x] Keep auth configuration unchanged while the domain is undecided; include demo-domain and later production-domain setup instructions.
+# Restore Home bookings and amount dashboard
+- [x] Restore the shared searchable booking table on Home, keeping the welcome and today's schedule.
+- [x] Restore all original dashboard summaries on a separate protected Amounts page in the menu.
+- [x] Verify Home, Amounts, search and mobile navigation with a signed-in account.
