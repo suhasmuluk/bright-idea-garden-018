@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
-import { Eye, Pencil, Printer, MessageCircle, Search } from "lucide-react";
+import { Eye, Pencil, Printer, MessageCircle, Search, PlusCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -27,9 +27,14 @@ export function BookingsTable() {
 
   return (
     <div className="space-y-5">
-      <div>
-        <h1 className="text-3xl text-maroon">Bookings</h1>
-        <p className="text-muted-foreground">{rows.length} of {data.length} bookings shown</p>
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <h1 className="text-3xl text-maroon">Bookings</h1>
+          <p className="text-muted-foreground">{rows.length} of {data.length} bookings shown</p>
+        </div>
+        <Button asChild className="shrink-0 gap-1.5">
+          <Link to="/new"><PlusCircle className="h-4 w-4" />New Booking</Link>
+        </Button>
       </div>
 
       <div className="grid gap-2 rounded-2xl border bg-card p-3 sm:grid-cols-2 lg:grid-cols-4">
