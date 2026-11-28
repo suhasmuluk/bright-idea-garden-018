@@ -86,7 +86,7 @@ export function BookingsTable() {
                 <td className="px-1.5 py-1.5 whitespace-nowrap">{formatINR(b.advance_amount)}</td>
                 <td className="px-1.5 py-1.5 font-semibold whitespace-nowrap text-maroon">{formatINR(b.balance_amount)}</td>
                 <td className="px-1.5 py-1.5 whitespace-nowrap"><span className="rounded-full bg-accent px-1.5 py-0.5 text-[10px]">{b.status}</span></td>
-                <td className="px-2 py-1.5"><ProductionSelect id={b.id} value={b.production_status} /></td>
+                <td className="px-2 py-1.5"><ProductionSelect id={b.id} value={b.production_status} compact /></td>
                 <td className="px-2 py-1.5">
                   <div className="flex gap-0">
                     <Button size="icon" variant="ghost" asChild aria-label="View" className="h-6 w-6"><Link to="/bookings/$id" params={{ id: b.id }}><Eye className="h-3.5 w-3.5" /></Link></Button>

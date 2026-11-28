@@ -5,7 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { PRODUCTION_STATUSES } from "@/lib/booking";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
-export function ProductionSelect({ id, value }: { id: string; value: string }) {
+export function ProductionSelect({ id, value, compact = false }: { id: string; value: string; compact?: boolean }) {
   const qc = useQueryClient();
   const [busy, setBusy] = useState(false);
   async function update(production_status: string) {
@@ -18,5 +18,5 @@ export function ProductionSelect({ id, value }: { id: string; value: string }) {
     } catch (error) { toast.error((error as Error).message); }
     finally { setBusy(false); }
   }
-  return <Select value={value} onValueChange={update} disabled={busy}><SelectTrigger aria-label="Production status" className="h-7 min-w-24 text-[11px]"><SelectValue /></SelectTrigger><SelectContent>{PRODUCTION_STATUSES.map((status) => <SelectItem key={status} value={status}>{status}</SelectItem>)}</SelectContent></Select>;
+  return <Select value={value} onValueChange={update} disabled={busy}><SelectTrigger aria-label="Production status" className={compact ? "h-7 min-w-24 text-[11px]" : "min-w-40"}><SelectValue /></SelectTrigger><SelectContent>{PRODUCTION_STATUSES.map((status) => <SelectItem key={status} value={status}>{status}</SelectItem>)}</SelectContent></Select>;
 }
