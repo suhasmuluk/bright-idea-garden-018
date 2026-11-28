@@ -18,5 +18,5 @@ export function ProductionSelect({ id, value }: { id: string; value: string }) {
     } catch (error) { toast.error((error as Error).message); }
     finally { setBusy(false); }
   }
-  return <Select value={value} onValueChange={update} disabled={busy}><SelectTrigger aria-label="Production status" className="min-w-40"><SelectValue /></SelectTrigger><SelectContent>{PRODUCTION_STATUSES.map((status) => <SelectItem key={status} value={status}>{status}</SelectItem>)}</SelectContent></Select>;
+  return <Select value={value} onValueChange={update} disabled={busy}><SelectTrigger aria-label="Production status" className="h-7 min-w-24 text-[11px]"><SelectValue /></SelectTrigger><SelectContent>{PRODUCTION_STATUSES.map((status) => <SelectItem key={status} value={status}>{status}</SelectItem>)}</SelectContent></Select>;
 }
