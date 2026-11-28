@@ -25,21 +25,22 @@ function Home() {
 
   return (
     <div className="space-y-6">
-      <section className="relative overflow-hidden rounded-3xl border bg-card px-6 py-8 shadow-warm sm:px-10 sm:py-12">
+      <div className="grid gap-4 lg:grid-cols-2">
+      <section className="relative overflow-hidden rounded-3xl border bg-card px-5 py-6 shadow-warm sm:px-7 sm:py-8">
         <div className="gold-rule absolute inset-x-0 top-0" />
-        <div className="flex flex-col items-start gap-5 sm:flex-row sm:items-center sm:gap-7">
-          <span className="grid h-16 w-16 shrink-0 place-items-center rounded-2xl bg-saffron font-display text-4xl text-primary-foreground">ॐ</span>
-          <div>
-            <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">{s.shop_name}</p>
-            <h1 className="mt-1 text-4xl text-maroon sm:text-5xl">Ganpati Bappa Morya 🙏</h1>
-            <p className="mt-2 max-w-xl text-muted-foreground">
+        <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:gap-5">
+          <span className="grid h-14 w-14 shrink-0 place-items-center rounded-2xl bg-saffron font-display text-3xl text-primary-foreground">ॐ</span>
+          <div className="min-w-0">
+            <p className="truncate text-xs uppercase tracking-[0.2em] text-muted-foreground">{s.shop_name}</p>
+            <h1 className="mt-1 truncate text-3xl text-maroon sm:text-4xl">Ganpati Bappa Morya 🙏</h1>
+            <p className="mt-2 text-muted-foreground">
               {new Date().toLocaleDateString("en-IN", { weekday: "long", day: "numeric", month: "long", year: "numeric" })}
             </p>
           </div>
         </div>
       </section>
 
-      <section className="rounded-2xl border bg-card">
+      <section className="min-w-0 rounded-2xl border bg-card">
         <div className="flex items-center gap-2 border-b px-5 py-4">
           <CalendarClock className="h-5 w-5 text-maroon" />
           <h2 className="text-xl text-maroon">Today's Pickup &amp; Delivery</h2>
@@ -47,7 +48,7 @@ function Home() {
         </div>
 
         {todays.length === 0 ? (
-          <div className="flex flex-col items-center gap-2 px-5 py-12 text-center">
+          <div className="flex flex-col items-center gap-2 px-5 py-10 text-center">
             <Inbox className="h-8 w-8 text-muted-foreground" />
             <p className="text-muted-foreground">Nothing scheduled for today.</p>
           </div>
@@ -67,6 +68,7 @@ function Home() {
           </ul>
         )}
       </section>
+      </div>
 
       <BookingsTable />
 
